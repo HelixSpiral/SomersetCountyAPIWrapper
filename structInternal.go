@@ -2,6 +2,7 @@ package somersetcountywrapper
 
 import (
 	"encoding/json"
+	"regexp"
 	"strings"
 )
 
@@ -56,6 +57,10 @@ func (d *dispatchString) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
+
+	// This replaces all spaces with a single space so we don't have duplicates.
+	r := regexp.MustCompile(`\s+`)
+	v = r.ReplaceAllString(v, " ")
 
 	*d = dispatchString(strings.TrimSpace(v))
 
